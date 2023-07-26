@@ -4,21 +4,22 @@ import './App.css';
 
 const App = () => {
     useEffect(() => {
-        const svg = d3.select("svg"),
-            width = +svg.attr("width"),
-            height = +svg.attr("height");
+        const width = 500;
+        const height = 500;
 
-        const projection = d3.geoMercator()
-            .center([2, 47])                // GPS of location to zoom on
-            .scale(980)                       // This is like the zoom
-            .translate([width / 2, height / 2])
+        const container = d3.select("#svg-container");
+        container.selectChildren().remove();
+        container.append('svg');
+
+        const svg = d3.select("svg");
+        svg.attr("width", width);
+        svg.attr("height", height);
 
         d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
             .then(function (data: any) {
-                data.features = data.features.filter((d: any) => {
-                    console.log(d.properties.name);
-                    return d.properties.name === "France"
-                })
+                data.features = [data.features[Math.floor(Math.random() * data.features.length)]]
+
+                const projection = d3.geoMercator().fitSize([width, height], data);
 
                 const p: any = d3.geoPath()
                     .projection(projection);
@@ -35,7 +36,7 @@ const App = () => {
 
     return (
         <div>
-            <svg id="my_dataviz" width="400" height="300"></svg>
+            <div id="svg-container"></div>
         </div>
     );
 }

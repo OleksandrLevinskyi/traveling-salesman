@@ -6,7 +6,7 @@ import './App.css';
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
     const [countryName, setCountryName] = useState('');
-    const [destinations, setDestinations] = useState<Array<Array<number>>>([]);
+    const [destinations, setDestinations] = useState<Array<any>>([]);
 
     useEffect(() => {
         const width = 500;
@@ -68,13 +68,31 @@ const App = () => {
                     .attr('id', destinations.length)
                     .attr("fill", "black");
 
-                destinations.push([x, y]);
+                destinations.push({x, y});
             }
 
             i++;
         }
 
+        console.log(destinations)
         setDestinations(destinations);
+        createAdjacencyMatrix(destinations);
+    }
+
+    const createAdjacencyMatrix = (destinations: Array<any>) => {
+        const adjacencyMatrix = Array.from({length: destinations.length}, () => Array(destinations.length).fill(0));
+
+        for (let r = 0; r < adjacencyMatrix.length; r++) {
+            for (let c = 0; c < adjacencyMatrix[r].length; c++) {
+                adjacencyMatrix[r][c] = getDistance(destinations[r], destinations[c]);
+            }
+        }
+
+        console.log(adjacencyMatrix)
+    }
+
+    const getDistance = (a: any, b: any) => {
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     }
 
     return (

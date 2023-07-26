@@ -1,8 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as d3 from "d3";
 import './App.css';
 
 const App = () => {
+    const [totalCost, setTotalCost] = useState(0);
+
     useEffect(() => {
         const width = 500;
         const height = 500;
@@ -70,6 +72,7 @@ const App = () => {
         <div>
             <h1 id="country-title"></h1>
             <div id="svg-container"></div>
+            <p>Total cost: {totalCost}</p>
         </div>
     );
 }

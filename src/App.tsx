@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {flag, code, name, countries} from 'country-emoji';
+import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
+import {createAdjacencyMatrix, createRandomPoints} from "./utils";
 
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
@@ -43,57 +44,11 @@ const App = () => {
 
                 const path = svg.select("path");
 
-                createRandomPoints(50, path, svg)
+                const destinations = createRandomPoints(50, path, svg);
+                setDestinations(destinations);
+                createAdjacencyMatrix(destinations);
             })
     }, []);
-
-    const createRandomPoints = (numPoints: number, path: any, svg: any) => {
-        let i = 0;
-        const bbox = path.node().getBBox();
-        const destinations = [];
-
-        while (i < numPoints) {
-            const x = bbox.x + Math.random() * bbox.width;
-            const y = bbox.y + Math.random() * bbox.height;
-
-            const svgPoint = svg.node().createSVGPoint();
-            svgPoint.x = x;
-            svgPoint.y = y;
-
-            if (path.node().isPointInFill(svgPoint)) {
-                svg.append("circle")
-                    .attr("cx", x)
-                    .attr("cy", y)
-                    .attr("r", 5)
-                    .attr('id', destinations.length)
-                    .attr("fill", "black");
-
-                destinations.push({x, y});
-            }
-
-            i++;
-        }
-
-        console.log(destinations)
-        setDestinations(destinations);
-        createAdjacencyMatrix(destinations);
-    }
-
-    const createAdjacencyMatrix = (destinations: Array<any>) => {
-        const adjacencyMatrix = Array.from({length: destinations.length}, () => Array(destinations.length).fill(0));
-
-        for (let r = 0; r < adjacencyMatrix.length; r++) {
-            for (let c = 0; c < adjacencyMatrix[r].length; c++) {
-                adjacencyMatrix[r][c] = getDistance(destinations[r], destinations[c]);
-            }
-        }
-
-        console.log(adjacencyMatrix)
-    }
-
-    const getDistance = (a: any, b: any) => {
-        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    }
 
     return (
         <div>

@@ -19,6 +19,9 @@ const App = () => {
             .then(function (data: any) {
                 data.features = [data.features[Math.floor(Math.random() * data.features.length)]]
 
+                d3.select("#country-title")
+                    .text(data.features[0].properties.name);
+
                 const projection = d3.geoMercator().fitSize([width, height], data);
 
                 const p: any = d3.geoPath()
@@ -36,6 +39,7 @@ const App = () => {
 
     return (
         <div>
+            <h1 id="country-title"></h1>
             <div id="svg-container"></div>
         </div>
     );

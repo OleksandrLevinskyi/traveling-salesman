@@ -6,6 +6,7 @@ import './App.css';
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
     const [countryName, setCountryName] = useState('');
+    const [destinations, setDestinations] = useState<Array<Array<number>>>([]);
 
     useEffect(() => {
         const width = 500;
@@ -49,7 +50,7 @@ const App = () => {
     const createRandomPoints = (numPoints: number, path: any, svg: any) => {
         let i = 0;
         const bbox = path.node().getBBox();
-        console.log(path.node())
+        const destinations = [];
 
         while (i < numPoints) {
             const x = bbox.x + Math.random() * bbox.width;
@@ -64,11 +65,16 @@ const App = () => {
                     .attr("cx", x)
                     .attr("cy", y)
                     .attr("r", 5)
+                    .attr('id', destinations.length)
                     .attr("fill", "black");
+
+                destinations.push([x, y]);
             }
 
             i++;
         }
+
+        setDestinations(destinations);
     }
 
     return (
@@ -77,6 +83,7 @@ const App = () => {
             <h1 className="large-text">{flag(countryName)}</h1>
             <div id="svg-container"></div>
             <p>Total cost: {totalCost}</p>
+            <p>Total destinations: {destinations.length}</p>
         </div>
     );
 }

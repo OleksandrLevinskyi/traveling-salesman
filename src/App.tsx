@@ -42,15 +42,27 @@ const App = () => {
     }, []);
 
     const createRandomPoints = (numPoints: number, path: any, svg: any) => {
-        var pathLength = path.node().getTotalLength();
+        let i = 0;
+        const bbox = path.node().getBBox();
+        console.log(path.node())
 
-        for (var i = 0; i < numPoints; i++) {
-            var point = path.node().getPointAtLength(Math.random() * pathLength);
-            svg.append("circle")
-                .attr("cx", point.x)
-                .attr("cy", point.y)
-                .attr("r", 3) // Adjust the radius of the points as needed
-                .attr("fill", "black");
+        while (i < numPoints) {
+            const x = bbox.x + Math.random() * bbox.width;
+            const y = bbox.y + Math.random() * bbox.height;
+
+            const svgPoint = svg.node().createSVGPoint();
+            svgPoint.x = x;
+            svgPoint.y = y;
+
+            if (path.node().isPointInFill(svgPoint)) {
+                svg.append("circle")
+                    .attr("cx", x)
+                    .attr("cy", y)
+                    .attr("r", 5)
+                    .attr("fill", "black");
+            }
+
+            i++;
         }
     }
 

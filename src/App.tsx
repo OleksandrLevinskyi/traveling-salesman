@@ -16,7 +16,7 @@ const App = () => {
         svg.attr("height", height);
 
         d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-            .then(function (data: any) {
+            .then((data: any) => {
                 data.features = [data.features[Math.floor(Math.random() * data.features.length)]]
 
                 d3.select("#country-title")
@@ -34,8 +34,25 @@ const App = () => {
                     .attr("fill", "grey")
                     .attr("d", p)
                     .style("stroke", "none")
+
+                const path = svg.select("path");
+
+                createRandomPoints(50, path, svg)
             })
     }, []);
+
+    const createRandomPoints = (numPoints: number, path: any, svg: any) => {
+        var pathLength = path.node().getTotalLength();
+
+        for (var i = 0; i < numPoints; i++) {
+            var point = path.node().getPointAtLength(Math.random() * pathLength);
+            svg.append("circle")
+                .attr("cx", point.x)
+                .attr("cy", point.y)
+                .attr("r", 3) // Adjust the radius of the points as needed
+                .attr("fill", "black");
+        }
+    }
 
     return (
         <div>

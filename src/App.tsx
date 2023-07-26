@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import {flag, code, name, countries} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
 
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
+    const [countryName, setCountryName] = useState('');
 
     useEffect(() => {
         const width = 500;
@@ -23,6 +25,7 @@ const App = () => {
 
                 d3.select("#country-title")
                     .text(data.features[0].properties.name);
+                setCountryName(data.features[0].properties.name);
 
                 const projection = d3.geoMercator().fitSize([width, height], data);
 
@@ -71,6 +74,7 @@ const App = () => {
     return (
         <div>
             <h1 id="country-title"></h1>
+            <h1 className="large-text">{flag(countryName)}</h1>
             <div id="svg-container"></div>
             <p>Total cost: {totalCost}</p>
         </div>

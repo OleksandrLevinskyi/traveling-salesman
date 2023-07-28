@@ -47,8 +47,6 @@ const App = () => {
                 const destinations = createRandomPoints(20, path, svg);
                 setDestinations(destinations);
                 createAdjacencyMatrix(destinations);
-
-                drawLine(0, 1, svg)
             });
     }, []);
 
@@ -59,13 +57,14 @@ const App = () => {
             <div id="svg-container"></div>
             <p>Total cost: {totalCost}</p>
             <p>Total destinations: {destinations.length}</p>
-            <button onClick={()=>{
+            <button onClick={async ()=>{
                 let dist = createAdjacencyMatrix(destinations)
 
                 let ans = Infinity;
                 let visited = new Set<number>();
                 visited.add(0);
-                ans = Math.min(ans, calculateShortestPath(0, visited, dist) + dist[0][0]);
+                ans = Math.min(ans, await calculateShortestPath(0, visited, dist) + dist[0][0]);
+                //todo:draw a final path
 
                 console.log('answer ' + ans)
             }}>Start</button>

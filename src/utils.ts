@@ -30,7 +30,7 @@ export const createRandomPoints = (numPoints: number, path: any, svg: any) => {
     return destinations;
 }
 
-export const drawLine = (pointAIdx: any, pointBIdx: any, svg: any) => {
+export const drawLine = (pointAIdx: any, pointBIdx: any) => {
     const pointA = d3.select(`#circle-${pointAIdx}`);
     const pointB = d3.select(`#circle-${pointBIdx}`);
 
@@ -38,7 +38,8 @@ export const drawLine = (pointAIdx: any, pointBIdx: any, svg: any) => {
         return;
     }
 
-    svg.append('line')
+    d3.select('#visual-area')
+        .append('line')
         .attr('x1', pointA.attr('cx'))
         .attr('y1', pointA.attr('cy'))
         .attr('x2', pointB.attr('cx'))
@@ -66,14 +67,19 @@ export const createAdjacencyMatrix = (destinations: Array<any>) => {
 
 const getDistance = (a: any, b: any) => Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
-export const calculateShortestPath = (i: number, visited: Set<number>, dist: Array<Array<number>>, memo: any = {}) => {
+export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, memo: any = {}) => {
     if (visited.size === dist.length && visited.has(0) && visited.has(i)) {
         // draw the line
+        await pause(100);
+        drawLine(i, 0);
         // remove the line
+        await pause(100);
+        removeLine(i, 0);
         // console.log('explored path: ' + Array.from(visited).join('->'))
         return dist[i][0];
     }
 
+    //todo: double check sorting is right
     let key = Array.from(visited).sort().join('-');
 
     if (key in memo) {
@@ -86,10 +92,18 @@ export const calculateShortestPath = (i: number, visited: Set<number>, dist: Arr
         if (j !== i && j !== 0 && !visited.has(j)) {
             visited.add(j);
             // draw a line
-            let cost = calculateShortestPath(j, visited, dist, memo) + dist[i][j];
+            console.log(`draw a line ${i}-${j}`)
+            await pause(100);
+            drawLine(i, j);
+
+            let cost = await calculateShortestPath(j, visited, dist, memo) + dist[i][j];
             res = Math.min(res, cost);
             visited.delete(j);
+
             // remove a line
+            console.log(`remove a line ${i}-${j}`)
+            await pause(100);
+            removeLine(i, j);
         }
     }
 
@@ -97,3 +111,5 @@ export const calculateShortestPath = (i: number, visited: Set<number>, dist: Arr
 
     return memo[key];
 }
+
+const pause = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

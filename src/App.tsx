@@ -8,11 +8,12 @@ import {
     Button,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
-    Heading, HStack, Slider,
-    Text, VStack
+    Heading,
+    HStack,
+    Text,
 } from "@chakra-ui/react";
+import './App.css';
 import {CustomSlider} from "./CustomSlider";
 
 export const App = () => {
@@ -22,8 +23,8 @@ export const App = () => {
     const [destinations, setDestinations] = useState<Array<any>>([]);
 
     useEffect(() => {
-        const width = 500;
-        const height = 500;
+        const width = 400;
+        const height = 400;
 
         const svg = createNewSvgElement(width, height);
 
@@ -33,32 +34,38 @@ export const App = () => {
 
                 const path = svg.select('path');
                 const destinations = createRandomPoints(20, path, svg);
+                const name = data.features[0].properties.name;
 
                 createAdjacencyMatrix(destinations);
 
-                setCountryName(data.features[0].properties.name);
+                setCountryName(`${flag(name)} ${name} ${flag(name)}`);
                 setDestinations(destinations);
             });
     }, []);
 
     return (
         <HStack>
-            <Card>
+            <Card margin='5' width='50%' id='card'>
                 <CardHeader>
-                    <Heading size='md'>{flag(countryName)} <span id="country-title"></span> {flag(countryName)}
+                    <Heading size='lg' textAlign='center'>
+                        {countryName}
                     </Heading>
+
+                    <Text marginX='20' textAlign='center'>
+                        A government of {countryName} needs
+                        to deliver goods in one go around the country. What is the best route to take?</Text>
                 </CardHeader>
 
-                <CardBody>
+                <CardBody margin='auto'>
                     <span id="svg-container"></span>
-                    <Button variant='solid' colorScheme='blue'
+                    <CustomSlider/>
+                    <Button variant='solid' colorScheme='blue' width='100%'
                             onClick={async () => await launchAnimation(destinations)}>
                         Start Animation
                     </Button>
-                    <CustomSlider/>
                 </CardBody>
             </Card>
-            <Card>
+            <Card margin='5'>
                 <CardHeader>
                     <Heading size='md'>Stats</Heading>
                 </CardHeader>

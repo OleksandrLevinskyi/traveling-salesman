@@ -65,6 +65,7 @@ export const drawFinalPath = async (solutions: any, answer: number) => {
     }
 
     drawLine(shortestPath[shortestPath.length - 1], 0);
+    d3.select('#total-cost').text(answer);
 }
 
 export const drawRandomCountryShape = (data: any, width: number, height: number) => {

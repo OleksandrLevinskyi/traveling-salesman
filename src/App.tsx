@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
-import {createAdjacencyMatrix, createRandomPoints, drawLine} from "./utils";
+import {createAdjacencyMatrix, createRandomPoints, drawLine, removeLine} from "./utils";
 
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
@@ -15,9 +15,9 @@ const App = () => {
 
         const container = d3.select("#svg-container");
         container.selectChildren().remove();
-        container.append('svg');
+        container.append('svg').attr('id', 'visual-area');
 
-        const svg = d3.select("svg");
+        const svg = d3.select("#visual-area");
         svg.attr("width", width);
         svg.attr("height", height);
 
@@ -47,7 +47,9 @@ const App = () => {
                 const destinations = createRandomPoints(20, path, svg);
                 setDestinations(destinations);
                 createAdjacencyMatrix(destinations);
-            })
+
+                drawLine(0, 1, svg)
+            });
     }, []);
 
     return (
@@ -57,6 +59,7 @@ const App = () => {
             <div id="svg-container"></div>
             <p>Total cost: {totalCost}</p>
             <p>Total destinations: {destinations.length}</p>
+            <button onClick={()=>removeLine(0, 1)}>Start</button>
         </div>
     );
 }

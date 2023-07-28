@@ -34,6 +34,10 @@ export const drawLine = (pointAIdx: any, pointBIdx: any, svg: any) => {
     const pointA = d3.select(`#circle-${pointAIdx}`);
     const pointB = d3.select(`#circle-${pointBIdx}`);
 
+    if (!pointA.node() || !pointB.node()) {
+        return;
+    }
+
     svg.append('line')
         .attr('x1', pointA.attr('cx'))
         .attr('y1', pointA.attr('cy'))
@@ -42,6 +46,10 @@ export const drawLine = (pointAIdx: any, pointBIdx: any, svg: any) => {
         .attr('id', `line-${pointAIdx}-${pointBIdx}`)
         .style('stroke', 'black')
         .style('stroke-width', 2);
+}
+
+export const removeLine = (pointAIdx: any, pointBIdx: any) => {
+    d3.select(`#line-${pointAIdx}-${pointBIdx}`).remove();
 }
 
 export const createAdjacencyMatrix = (destinations: Array<any>) => {

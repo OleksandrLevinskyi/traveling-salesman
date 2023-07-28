@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
-import {createAdjacencyMatrix, createRandomPoints} from "./utils";
+import {createAdjacencyMatrix, createRandomPoints, drawLine} from "./utils";
 
 const App = () => {
     const [totalCost, setTotalCost] = useState(0);
@@ -44,7 +44,7 @@ const App = () => {
 
                 const path = svg.select("path");
 
-                const destinations = createRandomPoints(50, path, svg);
+                const destinations = createRandomPoints(20, path, svg);
                 setDestinations(destinations);
                 createAdjacencyMatrix(destinations);
             })

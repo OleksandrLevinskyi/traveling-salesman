@@ -36,6 +36,9 @@ export const App = () => {
                 const destinations = createRandomPoints(20, path, svg);
                 const name = data.features[0].properties.name;
 
+                d3.select('#circle-0')
+                    .attr('fill', 'red');
+
                 createAdjacencyMatrix(destinations);
 
                 setCountryName(`${flag(name)} ${name} ${flag(name)}`);
@@ -52,8 +55,9 @@ export const App = () => {
                     </Heading>
 
                     <Text marginX='20' textAlign='center'>
-                        A government of {countryName} needs
-                        to deliver goods in one go around the country. What is the best route to take?</Text>
+                        A company in {countryName} needs
+                        to deliver goods in one go around the country, starting from their headquarters (indicated in
+                        red). What is the best route to take?</Text>
                 </CardHeader>
 
                 <CardBody margin='auto'>

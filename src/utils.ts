@@ -65,9 +65,9 @@ export const createAdjacencyMatrix = (destinations: Array<any>) => {
     return adjacencyMatrix;
 }
 
-const getDistance = (a: any, b: any) => Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+const getDistance = (a: any, b: any) => Math.floor(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
 
-export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, memo: any = {}) => {
+export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, other: any, memo: any = {}) => {
     if (visited.size === dist.length && visited.has(0) && visited.has(i)) {
         // draw the line
         await pause(100);
@@ -75,12 +75,15 @@ export const calculateShortestPath = async (i: number, visited: Set<number>, dis
         // remove the line
         await pause(100);
         removeLine(i, 0);
-        // console.log('explored path: ' + Array.from(visited).join('->'))
+        console.log('explored path: ' + Array.from(visited).join('->'))
+        console.log(other)
+
+        d3.select('#total-cost').text(other.cost);
         return dist[i][0];
     }
 
     //todo: double check sorting is right
-    let key = Array.from(visited).sort().join('-');
+    let key = Array.from(visited).sort((a: number, b: number) => a - b).join('-');
 
     if (key in memo) {
         return memo[key];
@@ -92,18 +95,22 @@ export const calculateShortestPath = async (i: number, visited: Set<number>, dis
         if (j !== i && j !== 0 && !visited.has(j)) {
             visited.add(j);
             // draw a line
-            console.log(`draw a line ${i}-${j}`)
+            // console.log(`draw a line ${i}-${j}`)
             await pause(100);
             drawLine(i, j);
+            other.cost += dist[i][j];
+            d3.select('#total-cost').text(other.cost);
 
-            let cost = await calculateShortestPath(j, visited, dist, memo) + dist[i][j];
+            let cost = await calculateShortestPath(j, visited, dist, other, memo) + dist[i][j];
             res = Math.min(res, cost);
             visited.delete(j);
 
             // remove a line
-            console.log(`remove a line ${i}-${j}`)
+            // console.log(`remove a line ${i}-${j}`)
             await pause(100);
             removeLine(i, j);
+            other.cost -= dist[i][j];
+            d3.select('#total-cost').text(other.cost);
         }
     }
 

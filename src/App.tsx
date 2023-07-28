@@ -5,7 +5,6 @@ import './App.css';
 import {calculateShortestPath, createAdjacencyMatrix, createRandomPoints, drawLine, removeLine} from "./utils";
 
 const App = () => {
-    const [totalCost, setTotalCost] = useState(0);
     const [countryName, setCountryName] = useState('');
     const [destinations, setDestinations] = useState<Array<any>>([]);
 
@@ -55,15 +54,15 @@ const App = () => {
             <h1 id="country-title"></h1>
             <h1 className="large-text">{flag(countryName)}</h1>
             <div id="svg-container"></div>
-            <p>Total cost: {totalCost}</p>
+            <p>Total cost: <span id="total-cost">0</span></p>
             <p>Total destinations: {destinations.length}</p>
             <button onClick={async ()=>{
                 let dist = createAdjacencyMatrix(destinations)
-
+                let other = {'cost':0, 'solution':''}
                 let ans = Infinity;
                 let visited = new Set<number>();
                 visited.add(0);
-                ans = Math.min(ans, await calculateShortestPath(0, visited, dist) + dist[0][0]);
+                ans = Math.min(ans, await calculateShortestPath(0, visited, dist, other) + dist[0][0]);
                 //todo:draw a final path
 
                 console.log('answer ' + ans)

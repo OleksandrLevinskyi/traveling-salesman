@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
-import {createRandomPoints} from "./utils/d3-utils";
+import {createRandomPoints, drawRandomCountryShape, createNewSvgElement} from "./utils/d3-utils";
 import {createAdjacencyMatrix} from "./utils/math-utils";
 import {launchAnimation} from "./utils/utils";
 
 const App = () => {
+    // todo: create a separate file with feature geojson
+    const DATA_URL = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
     const [countryName, setCountryName] = useState('');
     const [destinations, setDestinations] = useState<Array<any>>([]);
 
@@ -14,40 +16,19 @@ const App = () => {
         const width = 500;
         const height = 500;
 
-        const container = d3.select("#svg-container");
-        container.selectChildren().remove();
-        container.append('svg').attr('id', 'visual-area');
+        const svg = createNewSvgElement(width, height);
 
-        const svg = d3.select("#visual-area");
-        svg.attr("width", width);
-        svg.attr("height", height);
-
-        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+        d3.json(DATA_URL)
             .then((data: any) => {
-                data.features = [data.features[Math.floor(Math.random() * data.features.length)]]
+                drawRandomCountryShape(data, width, height);
 
-                d3.select("#country-title")
-                    .text(data.features[0].properties.name);
-                setCountryName(data.features[0].properties.name);
-
-                const projection = d3.geoMercator().fitSize([width, height], data);
-
-                const p: any = d3.geoPath()
-                    .projection(projection);
-
-                svg.append("g")
-                    .selectAll("path")
-                    .data(data.features)
-                    .join("path")
-                    .attr("fill", "grey")
-                    .attr("d", p)
-                    .style("stroke", "none")
-
-                const path = svg.select("path");
-
+                const path = svg.select('path');
                 const destinations = createRandomPoints(20, path, svg);
-                setDestinations(destinations);
+
                 createAdjacencyMatrix(destinations);
+
+                setCountryName(data.features[0].properties.name);
+                setDestinations(destinations);
             });
     }, []);
 

@@ -1,6 +1,10 @@
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
 export const createRandomPoints = (numPoints: number, path: any, svg: any) => {
+    if (!path.node()) {
+        return [];
+    }
+
     let i = 0;
     const bbox = path.node().getBBox();
     const destinations = [];
@@ -61,4 +65,37 @@ export const drawFinalPath = async (solutions: any, answer: number) => {
     }
 
     drawLine(shortestPath[shortestPath.length - 1], 0);
+}
+
+export const drawRandomCountryShape = (data: any, width: number, height: number) => {
+    data.features = [data.features[Math.floor(Math.random() * data.features.length)]]
+
+    d3.select('#country-title')
+        .text(data.features[0].properties.name);
+
+    const projection = d3.geoMercator().fitSize([width, height], data);
+
+    const p: any = d3.geoPath()
+        .projection(projection);
+
+    d3.select('#visual-area')
+        .append('g')
+        .selectAll('path')
+        .data(data.features)
+        .join('path')
+        .attr('fill', 'grey')
+        .attr('d', p)
+        .style('stroke', 'none');
+}
+
+export const createNewSvgElement = (width: number, height: number) => {
+    const container = d3.select('#svg-container');
+    container.selectChildren().remove();
+    container.append('svg').attr('id', 'visual-area');
+
+    const svg = d3.select('#visual-area');
+    svg.attr('width', width);
+    svg.attr('height', height);
+
+    return svg;
 }

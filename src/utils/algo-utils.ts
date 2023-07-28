@@ -11,7 +11,7 @@ export const calculateShortestPath = async (i: number, visited: Set<number>, dis
         return dist[i][0];
     }
 
-    //todo: optimize with by sorting
+    //todo: optimize by sorting
     let key = Array.from(visited).join('-');
 
     if (key in memo) {

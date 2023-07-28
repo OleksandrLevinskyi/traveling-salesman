@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
-import {calculateShortestPath, createAdjacencyMatrix, createRandomPoints, drawLine, removeLine} from "./utils";
+import {
+    createAdjacencyMatrix,
+    createRandomPoints,
+    launchAnimation,
+} from "./utils";
 
 const App = () => {
     const [countryName, setCountryName] = useState('');
@@ -56,24 +60,7 @@ const App = () => {
             <div id="svg-container"></div>
             <p>Total cost: <span id="total-cost">0</span></p>
             <p>Total destinations: {destinations.length}</p>
-            <button onClick={async () => {
-                const dist = createAdjacencyMatrix(destinations)
-                const solutions: any = {};
-                const other = {'cost': 0}
-                let ans = Infinity;
-                let visited = new Set<number>();
-                visited.add(0);
-                ans = Math.min(ans, await calculateShortestPath(0, visited, dist, other, solutions) + dist[0][0]);
-
-                // draw a final path
-                const shortestPath = solutions[ans];
-                for (let i = 1; i < shortestPath.length; i++) {
-                    drawLine(shortestPath[i - 1], shortestPath[i]);
-                }
-
-                drawLine(shortestPath[shortestPath.length - 1], 0);
-            }}>Start
-            </button>
+            <button onClick={async () => await launchAnimation(destinations)}>Start</button>
         </div>
     );
 }

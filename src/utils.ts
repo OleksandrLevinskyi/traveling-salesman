@@ -67,6 +67,23 @@ export const createAdjacencyMatrix = (destinations: Array<any>) => {
 
 const getDistance = (a: any, b: any) => Math.floor(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
 
+export const launchAnimation = async (destinations: Array<any>) => {
+    const dist = createAdjacencyMatrix(destinations);
+    const solutions: any = {};
+    const other = {'cost': 0}
+    let answer = Infinity;
+    let visited = new Set<number>([0]);
+    answer = Math.min(answer, await calculateShortestPath(0, visited, dist, other, solutions) + dist[0][0]);
+
+    // draw a final path
+    const shortestPath = solutions[answer];
+    for (let i = 1; i < shortestPath.length; i++) {
+        drawLine(shortestPath[i - 1], shortestPath[i]);
+    }
+
+    drawLine(shortestPath[shortestPath.length - 1], 0);
+}
+
 export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, other: any, solutions: any, memo: any = {}, speed: number = 5) => {
     if (visited.size === dist.length && visited.has(0) && visited.has(i)) {
         // draw the line

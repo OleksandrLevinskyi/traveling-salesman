@@ -65,3 +65,35 @@ export const createAdjacencyMatrix = (destinations: Array<any>) => {
 }
 
 const getDistance = (a: any, b: any) => Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+
+export const calculateShortestPath = (i: number, visited: Set<number>, dist: Array<Array<number>>, memo: any = {}) => {
+    if (visited.size === dist.length && visited.has(0) && visited.has(i)) {
+        // draw the line
+        // remove the line
+        // console.log('explored path: ' + Array.from(visited).join('->'))
+        return dist[i][0];
+    }
+
+    let key = Array.from(visited).sort().join('-');
+
+    if (key in memo) {
+        return memo[key];
+    }
+
+    let res = Infinity;
+
+    for (let j = 0; j < dist.length; j++) {
+        if (j !== i && j !== 0 && !visited.has(j)) {
+            visited.add(j);
+            // draw a line
+            let cost = calculateShortestPath(j, visited, dist, memo) + dist[i][j];
+            res = Math.min(res, cost);
+            visited.delete(j);
+            // remove a line
+        }
+    }
+
+    memo[key] = res;
+
+    return memo[key];
+}

@@ -52,3 +52,13 @@ export const drawLine = (pointAIdx: any, pointBIdx: any) => {
 export const removeLine = (pointAIdx: any, pointBIdx: any) => {
     d3.select(`#line-${pointAIdx}-${pointBIdx}`).remove();
 }
+
+export const drawFinalPath = async (solutions: any, answer: number) => {
+    const shortestPath = solutions[answer];
+
+    for (let i = 1; i < shortestPath.length; i++) {
+        drawLine(shortestPath[i - 1], shortestPath[i]);
+    }
+
+    drawLine(shortestPath[shortestPath.length - 1], 0);
+}

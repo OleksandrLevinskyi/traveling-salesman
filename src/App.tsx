@@ -2,11 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
 import './App.css';
-import {
-    createAdjacencyMatrix,
-    createRandomPoints,
-    launchAnimation,
-} from "./utils";
+import {createRandomPoints} from "./utils/d3-utils";
+import {createAdjacencyMatrix} from "./utils/math-utils";
+import {launchAnimation} from "./utils/utils";
 
 const App = () => {
     const [countryName, setCountryName] = useState('');

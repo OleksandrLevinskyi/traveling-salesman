@@ -56,17 +56,24 @@ const App = () => {
             <div id="svg-container"></div>
             <p>Total cost: <span id="total-cost">0</span></p>
             <p>Total destinations: {destinations.length}</p>
-            <button onClick={async ()=>{
-                let dist = createAdjacencyMatrix(destinations)
-                let other = {'cost':0, 'solution':''}
+            <button onClick={async () => {
+                const dist = createAdjacencyMatrix(destinations)
+                const solutions: any = {};
+                const other = {'cost': 0}
                 let ans = Infinity;
                 let visited = new Set<number>();
                 visited.add(0);
-                ans = Math.min(ans, await calculateShortestPath(0, visited, dist, other) + dist[0][0]);
-                //todo:draw a final path
+                ans = Math.min(ans, await calculateShortestPath(0, visited, dist, other, solutions) + dist[0][0]);
 
-                console.log('answer ' + ans)
-            }}>Start</button>
+                // draw a final path
+                const shortestPath = solutions[ans];
+                for (let i = 1; i < shortestPath.length; i++) {
+                    drawLine(shortestPath[i - 1], shortestPath[i]);
+                }
+
+                drawLine(shortestPath[shortestPath.length - 1], 0);
+            }}>Start
+            </button>
         </div>
     );
 }

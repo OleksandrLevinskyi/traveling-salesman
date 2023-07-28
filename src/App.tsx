@@ -1,12 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {flag} from 'country-emoji';
 import * as d3 from "d3";
-import './App.css';
 import {createRandomPoints, drawRandomCountryShape, createNewSvgElement} from "./utils/d3-utils";
 import {createAdjacencyMatrix} from "./utils/math-utils";
 import {launchAnimation} from "./utils/utils";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    Heading, HStack, Slider,
+    Text, VStack
+} from "@chakra-ui/react";
+import {CustomSlider} from "./CustomSlider";
 
-const App = () => {
+export const App = () => {
     // todo: create a separate file with feature geojson
     const DATA_URL = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
     const [countryName, setCountryName] = useState('');
@@ -33,15 +42,32 @@ const App = () => {
     }, []);
 
     return (
-        <div>
-            <h1 id="country-title"></h1>
-            <h1 className="large-text">{flag(countryName)}</h1>
-            <div id="svg-container"></div>
-            <p>Total cost: <span id="total-cost">0</span></p>
-            <p>Total destinations: {destinations.length}</p>
-            <button onClick={async () => await launchAnimation(destinations)}>Start</button>
-        </div>
+        <HStack>
+            <Card>
+                <CardHeader>
+                    <Heading size='md'>{flag(countryName)} <span id="country-title"></span> {flag(countryName)}
+                    </Heading>
+                </CardHeader>
+
+                <CardBody>
+                    <span id="svg-container"></span>
+                    <Button variant='solid' colorScheme='blue'
+                            onClick={async () => await launchAnimation(destinations)}>
+                        Start Animation
+                    </Button>
+                    <CustomSlider/>
+                </CardBody>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <Heading size='md'>Stats</Heading>
+                </CardHeader>
+
+                <CardBody>
+                    <Text>Total cost: <span id="total-cost">0</span></Text>
+                    <Text>Total destinations: {destinations.length}</Text>
+                </CardBody>
+            </Card>
+        </HStack>
     );
 }
-
-export default App;

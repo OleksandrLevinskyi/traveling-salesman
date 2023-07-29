@@ -15,9 +15,9 @@ import {
 } from "@chakra-ui/react";
 import './App.css';
 import {CustomSlider} from "./CustomSlider";
+import data from './data.json';
 
 export const App = () => {
-    const DATA_URL = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
     const [countryName, setCountryName] = useState('');
     const [destinations, setDestinations] = useState<Array<any>>([]);
 
@@ -27,22 +27,19 @@ export const App = () => {
 
         const svg = createNewSvgElement(width, height);
 
-        d3.json(DATA_URL)
-            .then((data: any) => {
-                drawRandomCountryShape(data, width, height);
+        drawRandomCountryShape(data, width, height);
 
-                const path = svg.select('path');
-                const destinations = createRandomPoints(10, path, svg);
-                const name = data.features[0].properties.name;
+        const path = svg.select('path');
+        const destinations = createRandomPoints(10, path, svg);
+        const name = data.features[0].properties.name;
 
-                d3.select('#circle-0')
-                    .attr('fill', 'red');
+        d3.select('#circle-0')
+            .attr('fill', 'red');
 
-                createAdjacencyMatrix(destinations);
+        createAdjacencyMatrix(destinations);
 
-                setCountryName(`${flag(name)} ${name} ${flag(name)}`);
-                setDestinations(destinations);
-            });
+        setCountryName(`${flag(name)} ${name} ${flag(name)}`);
+        setDestinations(destinations);
     }, []);
 
     return (

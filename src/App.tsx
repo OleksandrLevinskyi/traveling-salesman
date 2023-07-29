@@ -17,7 +17,6 @@ import './App.css';
 import {CustomSlider} from "./CustomSlider";
 
 export const App = () => {
-    // todo: create a separate file with feature geojson
     const DATA_URL = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
     const [countryName, setCountryName] = useState('');
     const [destinations, setDestinations] = useState<Array<any>>([]);
@@ -33,7 +32,7 @@ export const App = () => {
                 drawRandomCountryShape(data, width, height);
 
                 const path = svg.select('path');
-                const destinations = createRandomPoints(20, path, svg);
+                const destinations = createRandomPoints(10, path, svg);
                 const name = data.features[0].properties.name;
 
                 d3.select('#circle-0')

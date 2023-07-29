@@ -9,7 +9,7 @@ export const createRandomPoints = (numPoints: number, path: any, svg: any) => {
     const bbox = path.node().getBBox();
     const destinations = [];
 
-    while (i < numPoints) {
+    while (i < numPoints || destinations.length < 3) {
         const x = bbox.x + Math.random() * bbox.width;
         const y = bbox.y + Math.random() * bbox.height;
 

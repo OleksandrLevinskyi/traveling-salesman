@@ -12,6 +12,10 @@ export const launchAnimation = async (destinations: Array<any>) => {
 
     answer = Math.min(answer, await calculateShortestPath(0, visited, dist, other, solutions) + dist[0][0]);
 
+    console.log(destinations)
+    console.log(solutions)
+    console.log(answer)
+
     await drawFinalPath(solutions, answer);
 }
 

@@ -2,7 +2,7 @@ import {drawLine, removeLine} from "./d3-utils";
 import * as d3 from "d3";
 import {pause} from "./utils";
 
-export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, other: any, solutions: any, memo: any = {}, speed: number = 5) => {
+export const calculateShortestPath = async (i: number, visited: Set<number>, dist: Array<Array<number>>, other: any, solutions: any, memo: any = {}, speed: number = 1) => {
     if (visited.size === dist.length && visited.has(0) && visited.has(i)) {
         await animateDrawLine(i, 0, dist, other, speed);
         solutions[other.cost] = Array.from(visited);
@@ -11,8 +11,7 @@ export const calculateShortestPath = async (i: number, visited: Set<number>, dis
         return dist[i][0];
     }
 
-    //todo: optimize by sorting
-    let key = Array.from(visited).join('-');
+    let key = `${i}-${Array.from(visited).sort().join('-')}`;
 
     if (key in memo) {
         return memo[key];
